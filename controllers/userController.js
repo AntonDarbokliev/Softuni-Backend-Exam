@@ -65,10 +65,10 @@ userController.post("/login", async (req, res) => {
   }
 });
 
-// userController.get("/logout", async (req, res) => {
-//   res.clearCookie('auth')
-//   res.redirect('/')
-// });
+userController.get("/logout", async (req, res) => {
+  res.clearCookie('auth')
+  res.redirect('/')
+});
 
 // userController.get("/:id/profile",isAuthorized, async (req, res) => {
 //   try{
