@@ -2,15 +2,15 @@ const { isAuthorized } = require("../middlewares/authMiddleware.js");
 const electronicService = require("../services/electronicService.js");
 const { errorHelper } = require("../utils/errorHelpers.js");
 
-const creatureController = require("express").Router();
+const electronicController = require("express").Router();
 
-creatureController.get("/create", isAuthorized, (req, res) => {
+electronicController.get("/create", isAuthorized, (req, res) => {
   res.render("create", {
     title: "Add electronic",
   });
 });
 
-creatureController.post("/create", isAuthorized, async (req, res) => {
+electronicController.post("/create", isAuthorized, async (req, res) => {
   try {
     await electronicService.create(req.body, req.user._id);
     res.redirect("/");
@@ -23,7 +23,7 @@ creatureController.post("/create", isAuthorized, async (req, res) => {
   }
 });
 
-creatureController.get("/catalog", async (req, res) => {
+electronicController.get("/catalog", async (req, res) => {
   try {
     const electronics = await electronicService.getAll();
     res.render("catalog", {
@@ -39,7 +39,7 @@ creatureController.get("/catalog", async (req, res) => {
   }
 });
 
-creatureController.get("/:id/details", async (req, res) => {
+electronicController.get("/:id/details", async (req, res) => {
   try {
     const electronic = await electronicService.getById(req.params.id);
     const isOwner = req.user?._id == electronic.owner._id;
@@ -71,7 +71,7 @@ creatureController.get("/:id/details", async (req, res) => {
   }
 });
 
-creatureController.get("/:id/buy", isAuthorized, async (req, res) => {
+electronicController.get("/:id/buy", isAuthorized, async (req, res) => {
   const electronicId = req.params.id;
   const userId = req.user._id;
   try {
@@ -86,7 +86,7 @@ creatureController.get("/:id/buy", isAuthorized, async (req, res) => {
   }
 });
 
-creatureController.get("/:id/edit", isAuthorized, async (req, res) => {
+electronicController.get("/:id/edit", isAuthorized, async (req, res) => {
   try {
     const id = req.params.id;
     const electronic = await electronicService.getById(id);
@@ -102,13 +102,12 @@ creatureController.get("/:id/edit", isAuthorized, async (req, res) => {
     const errors = errorHelper(err);
     res.render("edit", {
       title: "Animal Edit",
-      electronic,
       errors,
     });
   }
 });
 
-creatureController.post("/:id/edit", isAuthorized, async (req, res) => {
+electronicController.post("/:id/edit", isAuthorized, async (req, res) => {
   try {
     const id = req.params.id;
     const electronic = await electronicService.getById(id)
@@ -129,18 +128,51 @@ creatureController.post("/:id/edit", isAuthorized, async (req, res) => {
   }
 });
 
-// creatureController.get('/:id/delete',isAuthorized, async (req,res) => {
-//   const id = req.params.id
-// try{
-//   await electronicService.del(id)
-//   res.redirect('/electronic/catalog')
-// }catch(err){
-//   const errors = errorHelper(err)
-//     res.render("details", {
-//       title: "Details",
-//       errors
-//     });
-// }
-// })
+electronicController.get('/:id/delete',isAuthorized, async (req,res) => {
+  try{
+  const id = req.params.id
 
-module.exports = creatureController;
+  const electronic = await electronicService.getById(id)
+  const isOwner = req.user?._id == electronic.owner._id;
+
+  if (!isOwner) throw new Error("You are not the owner of this electronic");
+
+
+  await electronicService.del(id)
+  res.redirect('/electronic/catalog')
+}catch(err){
+  const errors = errorHelper(err)
+    res.render("details", {
+      title: "Details",
+      errors
+    });
+}
+})
+
+electronicController.get("/search",isAuthorized ,async (req, res) => {
+  try {
+    // const allElectronics = await electronicService.getAll()
+      const { searchName, searchType } = req.query
+      let electronics;
+      if(!!searchName || !!searchType){
+        electronics = await electronicService.searchElectronic(searchName,searchType)
+      }else{
+        electronics = await electronicService.getAll()  
+      }
+
+
+    res.render("search", {
+      title: "Electronics Search",
+      electronics,
+    });
+  } catch (err) {
+    const errors = errorHelper(err)
+    res.render("details", {
+      title: "Details",
+      errors
+    });
+    console.log(err);
+  }
+});
+
+module.exports = electronicController;

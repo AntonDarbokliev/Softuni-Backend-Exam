@@ -27,9 +27,12 @@ async function getById(id) {
   return Electronic.findById(id).lean().populate('owner').populate('buyingList');
 }
 
-async function find(location) {
-  return Electronic.find({ location: { $regex: location, $options: "i" } }).lean();
+async function searchElectronic(searchName,searchType) {
+  return Electronic.find({ name: { $regex: searchName, $options: "i" } , type: { $regex: searchType, $options: "i"  }} ).lean();
 }
+
+//{ name: { $regex: searchName, $options: "i" } }, { type: { $regex: searchType, $options: "i" } }
+
 
 async function edit(id, data) {
   return Electronic.updateOne({ _id: id }, { $set: data }, { runValidators: true });
@@ -47,7 +50,7 @@ module.exports = {
   create,
   getAll,
   getById,
-  find,
+  searchElectronic,
   edit,
   del,
   buy,
