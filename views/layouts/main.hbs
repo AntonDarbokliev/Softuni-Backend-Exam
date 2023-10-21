@@ -1,46 +1,47 @@
-<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>{{title}}</title>
-    <link rel="stylesheet" href="../../static/css/styles.css">
-</head>
+    <link rel="stylesheet" href="../../static/css/styles.css" />
+  </head>
 
-<body>
+  <body>
     <!-- In case of error, you should display div with class "errorContainer" -->
     <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
 
-    <!-- <div>
+    {{#each errors}}
+      <div>
         <div class="errorContainer">
-            <p>Error</p>
+          <p>{{this}}</p>
         </div>
-    </div> -->
+      </div>
+    {{/each}}
 
     <div id="container">
 
-        <nav>
-            <ul>
-                <!--For all users-->
-                <li><a href="/">Home</a></li>
-                <li><a href="/parts/catalog">Catalog</a></li>
-                <!--For loggin users-->
-                <li><a href="/parts/create">Create Offer</a></li>
-                <li><a href="/parts/search">Search</a></li>
-                <li><a href="/user/logout">Logout</a></li>
-                <!--For guest user-->
-                <li><a href="/user/login">Login</a></li>
-                <li><a href="/user/register">Register</a></li>
+      <nav>
+        <ul>
+          <!--For all users-->
+          <li><a href="/">Home</a></li>
+          <li><a href="/parts/catalog">Catalog</a></li>
+          <!--For loggin users-->
+          <li><a href="/parts/create">Create Offer</a></li>
+          <li><a href="/parts/search">Search</a></li>
+          <li><a href="/user/logout">Logout</a></li>
+          <!--For guest user-->
+          <li><a href="/user/login">Login</a></li>
+          <li><a href="/user/register">Register</a></li>
 
-            </ul>
+        </ul>
 
-        </nav>
+      </nav>
 
-        {{{body}}}
+      {{{body}}}
 
-        <footer>@SoftUni - JS Back-End - Second Hand Electronics 2023</footer>
+      <footer>@SoftUni - JS Back-End - Second Hand Electronics 2023</footer>
     </div>
 
-</body>
+  </body>
 
 </html>

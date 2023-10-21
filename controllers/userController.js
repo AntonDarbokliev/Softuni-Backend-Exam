@@ -1,4 +1,4 @@
-// const { register, login } = require("../services/userService.js");
+const { register, login } = require("../services/userService.js");
 const { errorHelper } = require("../utils/errorHelpers.js");
 // const animalService = require("../services/animalService.js");
 // const { isAuthorized } = require("../middlewares/authMiddleware.js");
@@ -21,19 +21,20 @@ userController.get("/register", async (req, res) => {
   }
 });
 
-// userController.post("/register", async (req, res) => {
-//   try {
-//     const token = await register(req.body);
-//     res.cookie('auth',token,{httpOnly : true})
-//     res.redirect('/')
-//   } catch (err) {
-//     const errors = errorHelper(err)
-//     res.render('register',{
-//       title : 'Register',
-//       errors
-//     })
-//   }
-// });
+userController.post("/register", async (req, res) => {
+  try {
+    const token = await register(req.body);
+    res.cookie('auth',token,{httpOnly : true})
+    res.redirect('/')
+  } catch (err) {
+    const errors = errorHelper(err)
+    res.render('register',{
+      title : 'Register',
+      errors
+    })
+    console.log(err);
+  }
+});
 
 userController.get("/login", async (req, res) => {
   try {
@@ -49,19 +50,20 @@ userController.get("/login", async (req, res) => {
   }
 });
 
-// userController.post("/login", async (req, res) => {
-//   try {
-//     const token = await login(req.body);
-//     res.cookie('auth',token,{httpOnly : true})
-//     res.redirect('/')
-//   } catch (err) {
-//     const errors = errorHelper(err)
-//     res.render('login',{
-//       title : 'Login',
-//       errors
-//     })
-//   }
-// });
+userController.post("/login", async (req, res) => {
+  try {
+    const token = await login(req.body);
+    res.cookie('auth',token,{httpOnly : true})
+    res.redirect('/')
+  } catch (err) {
+    const errors = errorHelper(err)
+    res.render('login',{
+      title : 'Login',
+      errors
+    })
+    console.log(err);
+  }
+});
 
 // userController.get("/logout", async (req, res) => {
 //   res.clearCookie('auth')
