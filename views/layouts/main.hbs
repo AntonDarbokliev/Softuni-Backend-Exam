@@ -24,14 +24,17 @@
         <ul>
           <!--For all users-->
           <li><a href="/">Home</a></li>
-          <li><a href="/parts/catalog">Catalog</a></li>
+          <li><a href="/electronic/catalog">Catalog</a></li>
+          {{#if isAuthenticated}}
           <!--For loggin users-->
-          <li><a href="/parts/create">Create Offer</a></li>
-          <li><a href="/parts/search">Search</a></li>
+          <li><a href="/electronic/create">Create Offer</a></li>
+          <li><a href="/electronic/search">Search</a></li>
           <li><a href="/user/logout">Logout</a></li>
+          {{else}}
           <!--For guest user-->
           <li><a href="/user/login">Login</a></li>
           <li><a href="/user/register">Register</a></li>
+          {{/if}}
 
         </ul>
 
