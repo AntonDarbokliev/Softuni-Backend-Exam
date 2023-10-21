@@ -47,8 +47,7 @@ electronicController.get("/:id/details", async (req, res) => {
     const parsedBuys = JSON.parse(JSON.stringify(electronic.buyingList));
     const idArr = parsedBuys.map((x) => x._id);
     if (idArr.includes(req.user?._id)) {
-      //CHANGE PROPERTIES ACCORDING TO THE TASK
-      hasBought = true;
+      hasBought = true; //CHANGE PROPERTIES ACCORDING TO THE TASK
     }
 
     // const votesString = parsedBuys.map(x => x.email).join(', ')
@@ -110,12 +109,12 @@ electronicController.get("/:id/edit", isAuthorized, async (req, res) => {
 electronicController.post("/:id/edit", isAuthorized, async (req, res) => {
   try {
     const id = req.params.id;
-    const electronic = await electronicService.getById(id)
+    const electronic = await electronicService.getById(id);
     const electronicData = req.body;
     const isOwner = req.user?._id == electronic.owner._id;
 
     if (!isOwner) throw new Error("You are not the owner of this electronic");
-    
+
     await electronicService.edit(id, electronicData);
 
     res.redirect(`/electronic/${id}/details`);
@@ -128,48 +127,49 @@ electronicController.post("/:id/edit", isAuthorized, async (req, res) => {
   }
 });
 
-electronicController.get('/:id/delete',isAuthorized, async (req,res) => {
-  try{
-  const id = req.params.id
+electronicController.get("/:id/delete", isAuthorized, async (req, res) => {
+  try {
+    const id = req.params.id;
 
-  const electronic = await electronicService.getById(id)
-  const isOwner = req.user?._id == electronic.owner._id;
+    const electronic = await electronicService.getById(id);
+    const isOwner = req.user?._id == electronic.owner._id;
 
-  if (!isOwner) throw new Error("You are not the owner of this electronic");
+    if (!isOwner) throw new Error("You are not the owner of this electronic");
 
-
-  await electronicService.del(id)
-  res.redirect('/electronic/catalog')
-}catch(err){
-  const errors = errorHelper(err)
+    await electronicService.del(id);
+    res.redirect("/electronic/catalog");
+  } catch (err) {
+    const errors = errorHelper(err);
     res.render("details", {
       title: "Details",
-      errors
+      errors,
     });
-}
-})
+  }
+});
 
-electronicController.get("/search",isAuthorized ,async (req, res) => {
+electronicController.get("/search", isAuthorized, async (req, res) => {
   try {
     // const allElectronics = await electronicService.getAll()
-      const { searchName, searchType } = req.query
-      let electronics;
-      if(!!searchName || !!searchType){
-        electronics = await electronicService.searchElectronic(searchName,searchType)
-      }else{
-        electronics = await electronicService.getAll()  
-      }
-
+    const { searchName, searchType } = req.query;
+    let electronics;
+    if (!!searchName || !!searchType) {
+      electronics = await electronicService.searchElectronic(
+        searchName,
+        searchType
+      );
+    } else {
+      electronics = await electronicService.getAll();
+    }
 
     res.render("search", {
       title: "Electronics Search",
       electronics,
     });
   } catch (err) {
-    const errors = errorHelper(err)
+    const errors = errorHelper(err);
     res.render("details", {
       title: "Details",
-      errors
+      errors,
     });
     console.log(err);
   }
